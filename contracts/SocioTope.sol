@@ -453,3 +453,187 @@ contract SocioTope {
         return true;
     }
 }
+wagmi
+interface ISocioTope {
+    //address payable admin;
+    function admin() external view returns (address);
+
+    // currency address vars
+    //address private pETH;
+    function pETH() external view returns (address);
+
+    //address private pDAI;
+    function pDAI() external view returns (address);
+
+    //IERC20 public polyETH = IERC20(pETH);
+    function polyETH() external view returns (IERC20);
+
+    //IERC20 public polyDAI = IERC20(pDAI);
+    function polyETH() external view returns (IERC20);
+
+    uint256 public digits;
+
+    function digits() external view returns (uint256);
+
+    // admin lists mappings
+    // mapping(address => bool) public blacklist;
+    function blacklist(address _adr) external view returns(bool);
+    mapping(address => uint256) public greylisted;
+    function greylist
+    mapping(address => mapping(uint256 => uint256)) public greylist;
+    mapping(address => bool) public whitelist;
+    mapping(address => mapping(address => bool)) public following;
+    mapping(address => mapping(address => bool)) public followers;
+    mapping(address => mapping(address => mapping(uint256 => string)))
+        public message;
+    mapping(address => uint256) public msgRec;
+    mapping(address => uint256) public msgSent;
+
+    struct User {
+        uint256 id;
+        uint256 cnt;
+        uint256 role; // 0 inactive, 1 noob, 2 profiler, 99 admin
+        address adr;
+        string name;
+        string email;
+        uint256 likes;
+    }
+    struct Profile {
+        uint256 cnt;
+        address adr;
+        string avt;
+        string cols;
+        string fonts;
+        uint256 layout;
+    }
+
+    uint256 internal u;
+    User[] public users;
+    Profile[] public profiles;
+    mapping(address => uint256) internal userNum;
+    mapping(address => uint256) public userCountByAdr;
+
+    struct Socio {
+        uint256 id;
+        address author;
+        bool master;
+        bool pin;
+        uint256 copys;
+        address[] ownedBy;
+        string title;
+        string content;
+        address[] likedBy;
+        uint256 likes;
+    }
+    struct Comment {
+        uint256 id;
+        uint256 sid;
+        address author;
+        string title;
+        string content;
+        address[] likedBy;
+        uint256 likes;
+    }
+
+    uint256 internal s;
+    Socio[] public socios;
+    mapping(address => uint256) internal SocioCountOf;
+    mapping(address => mapping(uint256 => uint256)) public SocioCountOfAdrById;
+    mapping(address => mapping(uint256 => Socio)) public SocioIdOfAdrByCount;
+    mapping(uint256 => bool) public socioID;
+    mapping(uint256 => bool) public commentID;
+
+    uint256 internal c;
+    Comment[] public comments;
+    mapping(address => uint256) internal CommentCountOf;
+    mapping(address => mapping(uint256 => uint256))
+        public CommentCountOfAdrById;
+    mapping(address => mapping(uint256 => Comment))
+        public CommentIdOfAdrByCount;
+
+    function makeUser(
+        uint256 _id,
+        uint256 _cnt,
+        address _adr,
+        string memory _name,
+        string memory _email
+    ) public returns (bool);
+
+    function makeProfile(
+        address _adr,
+        string memory _avt,
+        string memory _cols,
+        string memory _fonts,
+        uint256 _layout
+    ) public returns (bool);
+
+    function createSocio(
+        uint256 _id,
+        bool _master,
+        bool _pin,
+        uint256 _copys,
+        string memory _title,
+        string memory _content
+    ) public returns (bool);
+
+    function createComment(
+        uint256 _id,
+        uint256 _sid,
+        string memory _title,
+        string memory _content
+    ) public returns (bool);
+
+    function editSocio(
+        uint256 _id,
+        string memory _title,
+        string memory _content
+    ) public returns (bool);
+
+    function editComment(
+        uint256 _id,
+        string memory _title,
+        string memory _content
+    ) public returns (bool);
+
+    function delSocio(uint256 _id) public returns (bool);
+
+    function delComment(uint256 _id) public returns (bool);
+
+    function likeSocio(uint256 _id) public returns (bool);
+
+    function likeComment(uint256 _id) public returns (bool);
+
+    function showSocio(uint256 _id) public view returns (Socio memory);
+
+    function showComment(uint256 _id) public view returns (Comment memory);
+
+    function myGraph() public view returns (User memory, Profile memory);
+
+    function lastPosts()
+        public
+        view
+        returns (
+            Socio memory,
+            Socio memory,
+            Socio memory
+        );
+
+    function lastComments()
+        public
+        view
+        returns (
+            Comment memory,
+            Comment memory,
+            Comment memory
+        );
+
+    function follow(address _follow) public returns (bool);
+
+    function unfollow(address _follow) public returns (bool);
+
+    function writeMessage(address _to, string memory _msg)
+        public
+        returns (bool);
+
+    function readMessage(address _from) public view returns (string memory);
+}
